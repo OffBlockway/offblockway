@@ -1,0 +1,27 @@
+extends layout
+
+block content
+	//h1= title
+	p(id = 'nice') #{title}
+
+	form(method='POST' action='/')
+		div.form-group
+			label(for='user') Username:
+			input( class = 'textbox', type='text', placeholder='username' name='user' )
+			br
+			label(for='content') Post:
+			input( type='text', placeholder='write post here' name='content' )
+			br
+			button.btn.btn-primary(type='submit') Submit
+
+	
+	each thing in posts
+		div.container
+			p.post-things #{verification}
+			p <span class = 'post-things'>Username:</span> 
+			p= thing.username
+			p <span class = 'post-things'>Post:</span> 
+			p=  thing.post
+
+
+
