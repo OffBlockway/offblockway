@@ -9,7 +9,7 @@ exports.config = {
   /**
    * Array of application names.
    */
-  app_name: ['Spherical'],
+  app_name: ['boiling-cove-42309'],
   /**
    * Your New Relic license key.
    */
