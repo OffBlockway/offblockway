@@ -13,8 +13,8 @@ var index = 1;
 console.log("User Name:", dummy.username);
 
 var postings = [ 
-	{"num" : 1, "username":"xyz", "post": "hey how is everyone doing today?", "verification": "unverified" },
-	{"num" : 2, "username":"zaid", "post": "how am i?", "verification": "unverified" }
+	{"num" : 1, "username":"xyz", "content": "hey how is everyone doing today?", "verification": "unverified" },
+	{"num" : 2, "username":"zaid", "content": "how am i?", "verification": "unverified" }
 ]
 
 var v_postings = [];
@@ -25,11 +25,12 @@ var v_postings = [];
 // make unverified, verified arrays, when i send them make them in progress
 // send every time 
 // make a counter for full nodes, if i try to connect to  a full node and get a service error disconnect the full node
+// 
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
-  res.render('index', { title: 'Spherical', posts: postings, username: postings[index].username, post: postings[index].post, verification: "Unverified"  });
+  res.render('index', { title: 'Spherical', posts: postings, username: postings[index].username, post: postings[index].content, verification: "Unverified"  });
   //res.render('post', { username: dummy.username }, { post: dummy.post });
 });
 
@@ -54,14 +55,14 @@ router.post('/', function(req, res)
 	// console.log(query1);
 	// console.log(query2);
 	//var content=req.body.content;
-	dummy.posts.push({"num" : index+1, "username":"xyz", "post": "hey how is everyone doing today?", "verification":
+	dummy.posts.push({"num" : index+1, "username":"xyz", "content": "hey how is everyone doing today?", "verification":
 	"unverified" });
 	// fs.writeFile("./routes/dummy.json", "whats up", function(err) {
  //    if(err) {
  //        return console.log(err);
  //    }
 	// });
-	postings.push({num : ++index, "username":req.body.user, "post":req.body.content, "verification": "unverified"});
+	postings.push({num : ++index, "username":req.body.user, "content":req.body.content, "verification": "unverified"});
 	console.log(req.body.content);
 	console.log(req.body.user);
 	console.log("here is index: " +index);
@@ -73,7 +74,7 @@ router.post('/', function(req, res)
 	//router.set('view engine', 'ejs');
 	//res.send('post.pug', { username: posts[index].username, post: posts[index].post });
 	//router.set('view engine', 'pug');
-	res.render('index', { title: 'Spherical', posts: postings, username: postings[index].username, post: postings[index].post, index: index, 
+	res.render('index', { title: 'Spherical', posts: postings, username: postings[index].username, post: postings[index].content, index: index, 
 	verification: "Unverified" });
 	res.end();
 
