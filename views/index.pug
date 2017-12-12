@@ -4,15 +4,16 @@ block content
 	//h1= title
 	p(id = 'nice') #{title}
 
-	form(method='POST' action='/')
+	form(method='POST' action='/posts')
 		div.form-group
 			label(for='user') Username:
-			input( class = 'textbox', type='text', placeholder='username' name='user' )
+			input( class = 'textbox', type='text', placeholder='username', name='user', target='uploader_iframe' )
 			br
 			label(for='content') Post:
 			input( type='text', placeholder='write post here' name='content' )
 			br
 			button.btn.btn-primary(type='submit') Submit
+			iframe(id="uploader_iframe", name="uploader_iframe", style="display: none")
 
 	
 	each thing in posts

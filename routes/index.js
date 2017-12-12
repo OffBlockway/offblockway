@@ -36,6 +36,8 @@ router.get('/', function(req, res, next) {
 
 
 
+
+
 // // for nodes trying to register with me
 // router.get('/consensus', function(req, res, next) {
 
@@ -47,7 +49,7 @@ router.get('/', function(req, res, next) {
 // });
 
 
-router.post('/', function(req, res)
+router.post('/posts', function(req, res)
 {
 	console.log("cool");
 	// var query1=req.body.var1;
@@ -74,10 +76,32 @@ router.post('/', function(req, res)
 	//router.set('view engine', 'ejs');
 	//res.send('post.pug', { username: posts[index].username, post: posts[index].post });
 	//router.set('view engine', 'pug');
+	res.redirect('/');
 	res.render('index', { title: 'Spherical', posts: postings, username: postings[index].username, post: postings[index].content, index: index, 
 	verification: "Unverified" });
 	res.end();
 
+});
+
+router.get('/', function(req, res)
+	{
+		res.render('/posts');
+	});
+
+
+
+
+
+// from full node for consensus
+router.post('/consensus', function(req, res, next) {
+
+	res.send(250);
+});
+
+// for DJ PRotocol B from full node
+router.post('/scores', function(req, res, next) {
+
+	res.send(250);
 });
 
 
