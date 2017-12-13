@@ -92,6 +92,18 @@ router.get('/', function(req, res)
 
 
 
+
+router.post('/register', function(req, res, next) {
+
+	res.send(250);
+});
+
+router.post('/package', function(req, res, next) {
+
+	res.send(250);
+});
+
+
 // from full node for consensus
 router.post('/consensus', function(req, res, next) {
 
