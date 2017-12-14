@@ -255,6 +255,7 @@ router.post('/scores', function(req, res, next) {
 });
 
 router.post('/client', function(req, res, next) {
+	res.render('thing', {body: req.body})
 	console.log(req.body);
 	res.send(250);
 });
