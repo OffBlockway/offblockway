@@ -260,6 +260,7 @@ router.post('/client', function(req, res, next) {
     if(err) {
         return console.log(err);
     }
+	});
 	console.log(req.body);
 	res.send(250);
 });
