@@ -86,9 +86,13 @@ router.get('/', function(req, res, next) {
 
   // res.render('index', { title: 'Spherical', posts: postings, username: postings[index].username, post: postings[index].content, verification: "Unverified"  });
   //res.render('post', { username: dummy.username }, { post: dummy.post });
+  postings.reverse();
+	v_postings.reverse();
   res.render('index', { title: 'Spherical', posts: postings, username: postings[index].username, post: postings[index].content, index: index, 
 	verification: "Unverified", v_posts: v_postings, v_username: v_postings[v_index].username, post: v_postings[v_index].content, v_index: v_index, 
 	v_verification: "Verified"});
+  postings.reverse();
+	v_postings.reverse();
 });
 
 
