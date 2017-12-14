@@ -13,6 +13,8 @@ const http = require('http');
 var index = 1; 
 var v_index = 0;
 
+var num_fnodes = 0;
+
 //console.log("User Name:", dummy.username);
 
 var postings = [ 
@@ -199,15 +201,20 @@ router.get('/', function(req, res)
 router.post('/register', function(req, res, next) {
 	for( var i = 0; i < req.body.length; i++)
 	{
-		console.log(req.body[i].uid);	
+		console.log(req.body);	
 		// get all the full node information in here
-		f_nodes.push({"uid" : req.body[i].uid});
+		f_nodes.push({"fullnode" : req.body});
+
 	}
 	
 	console.log(f_nodes);
 
+	num_fnodes = num_fnodes + 1;
+
 	res.send(250);
 });
+
+
 
 
 // for verifying posts
@@ -224,7 +231,7 @@ router.post('/package', function(req, res, next) {
 	{
 		for( var x = 0; x < postings.length; i++)
 		{
-			if( postings[x].uid === req.body[i].uid) 
+			if( postings[x].uid === req.body.uid[i]) 
 			{
 				v_postings.push(postings[x]);
 				postings.splice(x, 1);
@@ -257,12 +264,12 @@ router.post('/scores', function(req, res, next) {
 
 router.post('/client', function(req, res, next) {
 	//res.render('thing', {body: req.body})
-	writeStream.write(req.body, function(err) {
-    if(err) {
-        return console.log(err);
-    }
-	});
-	console.log(req.body);
+	// writeStream.write(req.body, function(err) {
+ //    if(err) {
+ //        return console.log(err);
+ //    }
+	// });
+	// console.log(req.body);
 	res.send(250);
 });
 
