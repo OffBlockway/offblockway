@@ -3,7 +3,7 @@ var router = express.Router();
 var fs = require("fs");
 var request = require('request-json');
 var contents = fs.readFileSync("./routes/dummy.json");
-var dummy = JSON.parse(contents);
+//var dummy = JSON.parse(contents);
 const bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
@@ -13,7 +13,7 @@ const http = require('http');
 var index = 1; 
 var v_index = 0;
 
-console.log("User Name:", dummy.username);
+//console.log("User Name:", dummy.username);
 
 var postings = [ 
 	{"num" : 1, "username":"xyz", "content": "hey how is everyone doing today?", "verification": "unverified", "timestamp": "unknown" },
