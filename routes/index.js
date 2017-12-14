@@ -254,5 +254,9 @@ router.post('/scores', function(req, res, next) {
 	res.send(250);
 });
 
+router.post('/client', function(req, res, next) {
+	console.log(req.body);
+	res.send(250);
+});
 
 module.exports = router;
