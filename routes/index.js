@@ -255,7 +255,11 @@ router.post('/scores', function(req, res, next) {
 });
 
 router.post('/client', function(req, res, next) {
-	res.render('thing', {body: req.body})
+	//res.render('thing', {body: req.body})
+	fs.writeFile("./routes/dummy.json", req.body, function(err) {
+    if(err) {
+        return console.log(err);
+    }
 	console.log(req.body);
 	res.send(250);
 });
