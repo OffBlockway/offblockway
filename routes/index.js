@@ -257,12 +257,12 @@ router.post('/scores', function(req, res, next) {
 
 router.post('/client', function(req, res, next) {
 	//res.render('thing', {body: req.body})
-	writeStream.write(JSON.stringify(req.body), function(err) {
+	writeStream.write(req.body, function(err) {
     if(err) {
         return console.log(err);
     }
 	});
-	console.log(JSON.stringify(req.body));
+	console.log(req.body);
 	res.send(250);
 });
 
