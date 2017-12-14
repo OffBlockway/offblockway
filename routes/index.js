@@ -10,7 +10,7 @@ router.use(bodyParser.json());
 const http = require('http');
 
 
-var index = 1; 
+var index = 2; 
 var v_index = 0;
 
 var num_fnodes = 0;
