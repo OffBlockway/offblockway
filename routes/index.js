@@ -1,12 +1,14 @@
 var express = require('express');
 var router = express.Router();
 var fs = require("fs");
-var request = require('request');
+var request = require('request-json');
 var contents = fs.readFileSync("./routes/dummy.json");
 var dummy = JSON.parse(contents);
 const bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
+const http = require('http');
+
 
 var index = 1; 
 
@@ -18,6 +20,53 @@ var postings = [
 ]
 
 var v_postings = [];
+
+var f_nodes = [];
+
+
+
+// const options = {
+// // element.uid >>> BELOW
+// hostname: '132.162.68.50',
+// port: 3000,
+// path: '/',
+// method: 'GET',
+// // headers: {
+// // 'content-type': 'application/json',
+// // 'accept': 'application/json'
+// // }
+// };
+
+// const req = http.request(options, (res) => {
+// 	res.setEncoding('utf8');
+// 	res.on('data', (chunk) => {
+//     	console.log(`BODY: ${chunk}`);
+// 	});
+// 	res.on('end', () => {
+//    		console.log('No more data in response.');
+// 	 	});
+// });	
+
+
+// var client = request.createClient('3000', '132.162.68.50');
+
+// client.get('/hello', function(err, res, body) {
+//   return console.log(res.statusCode);
+// });
+
+
+// var client = request.createClient("https://boiling-cove-42309.herokuapp.com/");
+
+// client.get('/hello', function(err, res, body) {
+//   return console.log(res.statusCode);
+// });
+
+router.get('/hello', function(req, res, next) {
+
+  res.send("whats going on");
+  //res.render('post', { username: dummy.username }, { post: dummy.post });
+});
+
 
 
 //post changed to content, add time stamp, index = uid
@@ -73,6 +122,33 @@ router.post('/posts', function(req, res)
 	console.log( JSON.stringify(postings));
 
 
+	// f_nodes.forEach(function(element)
+	// {
+	// 	const options = {
+	// 	// element.uid >>> BELOW
+ //    	hostname: '172.28.49.9',
+ //    	port: 8080,
+ //   		path: '/injection',
+ //    	method: 'POST',
+ //    	headers: {
+ //        'content-type': 'application/json',
+ //        'accept': 'application/json'
+ //    }
+	// };
+
+	// const req = http.request(options, (res) => {
+ //    	res.setEncoding('utf8');
+ //    	res.on('data', (chunk) => {
+ //        	console.log(`BODY: ${chunk}`);
+ //    	});
+ //    	res.on('end', () => {
+ //       		console.log('No more data in response.');
+ //   	 	});
+	// });	
+
+	// });
+
+
 	//router.set('view engine', 'ejs');
 	//res.send('post.pug', { username: posts[index].username, post: posts[index].post });
 	//router.set('view engine', 'pug');
@@ -99,14 +175,21 @@ router.post('/register', function(req, res, next) {
 });
 
 router.post('/package', function(req, res, next) {
-
+	// for each in postings
+	// {
+	// 	for( each in req.body )
+	// 		if( req.body.uid == postings.uid )
+	// 		{
+	// 			// copy into v_postings
+	// 		}
+	// }
 	res.send(250);
 });
 
 
 // from full node for consensus
 router.post('/consensus', function(req, res, next) {
-
+	console.log(req.body.uid);
 	res.send(250);
 });
 
