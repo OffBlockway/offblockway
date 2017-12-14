@@ -11,15 +11,19 @@ const http = require('http');
 
 
 var index = 1; 
+var v_index = 0;
 
 console.log("User Name:", dummy.username);
 
 var postings = [ 
-	{"num" : 1, "username":"xyz", "content": "hey how is everyone doing today?", "verification": "unverified" },
-	{"num" : 2, "username":"zaid", "content": "how am i?", "verification": "unverified" }
+	{"num" : 1, "username":"xyz", "content": "hey how is everyone doing today?", "verification": "unverified", "timestamp": "unknown" },
+	{"num" : 2, "username":"zaid", "content": "how am i?", "verification": "unverified", "timestamp": "unknown" }
 ]
 
-var v_postings = [];
+var v_postings = [
+	{"num" : 1, "username":"verified_loser", "content": "wow first verified post", "verification": "verified", "timestamp": "unknown" },
+	{"num" : 1, "username":"verified_loser", "content": "wow first cool post", "verification": "verified", "timestamp": "unknown" }
+]
 
 var f_nodes = [];
 
@@ -107,14 +111,16 @@ router.post('/posts', function(req, res)
 	// console.log(query1);
 	// console.log(query2);
 	//var content=req.body.content;
-	dummy.posts.push({"num" : index+1, "username":"xyz", "content": "hey how is everyone doing today?", "verification":
-	"unverified" });
+	var timeInMs = Date.now();
+
+	//dummy.posts.push({"num" : index+1, "username":"xyz", "content": "hey how is everyone doing today?", "verification":
+	//"unverified" });
 	// fs.writeFile("./routes/dummy.json", "whats up", function(err) {
  //    if(err) {
  //        return console.log(err);
  //    }
 	// });
-	postings.push({num : ++index, "username":req.body.user, "content":req.body.content, "verification": "unverified"});
+	postings.push({num : ++index, "username":req.body.user, "content":req.body.content, "verification": "unverified", "timestamp": timeInMs});
 	console.log(req.body.content);
 	console.log(req.body.user);
 	console.log("here is index: " +index);
@@ -153,9 +159,20 @@ router.post('/posts', function(req, res)
 	//router.set('view engine', 'ejs');
 	//res.send('post.pug', { username: posts[index].username, post: posts[index].post });
 	//router.set('view engine', 'pug');
-	res.redirect('/');
+	//res.redirect('/');
+
+	// res.render('index', { title: 'Spherical', posts: postings, username: postings[index].username, post: postings[index].content, index: index, 
+	// verification: "Unverified"},  {v_posts: v_postings, v_username: v_postings[v_index].username, post: v_postings[v_index].content, v_index: v_index, 
+	// v_verification: "verified"});
+
+	postings.reverse();
 	res.render('index', { title: 'Spherical', posts: postings, username: postings[index].username, post: postings[index].content, index: index, 
-	verification: "Unverified" });
+	verification: "Unverified"});
+	postings.reverse();
+
+
+	res.redirect('/');
+
 	res.end();
 
 });
@@ -184,6 +201,15 @@ router.post('/package', function(req, res, next) {
 	// 			// copy into v_postings
 	// 		}
 	// }
+	for( var i = 0; i < req.body.length; i++)
+	{
+		console.log(req.body[i].uid);	
+		// get all the full node information in here
+		f_nodes.push({"uid" : req.body[i].uid});
+	}
+	
+	console.log(f_nodes);
+
 	res.send(250);
 });
 

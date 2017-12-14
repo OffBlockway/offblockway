@@ -13,9 +13,16 @@ block content
 			input( type='text', placeholder='write post here' name='content' )
 			br
 			button.btn.btn-primary(type='submit') Submit
-			iframe(id="uploader_iframe", name="uploader_iframe", style="display: none")
 
-	
+
+	//each thing in v_posts
+	//	div.container
+	//		p.post-things #{v_verification}
+	//		p <span class = 'post-things'>Username:</span> 
+	//		p= thing.username
+	//		p <span class = 'post-things'>Post:</span> 
+	//		p=  thing.content
+
 	each thing in posts
 		div.container
 			p.post-things #{verification}
