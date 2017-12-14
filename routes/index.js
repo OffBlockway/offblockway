@@ -62,8 +62,9 @@ var f_nodes = [];
 // });
 
 router.get('/hello', function(req, res, next) {
-
-  res.send("whats going on");
+	var output = JSON.stringify(postings);
+  	res.send(output);
+  //consolelog("hell yah");
   //res.render('post', { username: dummy.username }, { post: dummy.post });
 });
 
