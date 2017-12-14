@@ -18,13 +18,13 @@ var num_fnodes = 0;
 //console.log("User Name:", dummy.username);
 
 var postings = [ 
-	{"num" : 1, "username":"xyz", "content": "hey how is everyone doing today?", "verification": "unverified", "timestamp": "unknown" },
-	{"num" : 2, "username":"zaid", "content": "how am i?", "verification": "unverified", "timestamp": "unknown" }
+	{"uid" : 1, "username":"xyz", "content": "hey how is everyone doing today?", "timestamp": "unknown", "verification": "unverified"},
+	{"uid" : 2, "username":"zaid", "content": "how am i?", "timestamp": "unknown", "verification": "unverified" }
 ]
 
 var v_postings = [
-	{"num" : 1, "username":"verified_loser", "content": "wow first verified post", "verification": "verified", "timestamp": "unknown" },
-	{"num" : 2, "username":"verified_loser", "content": "wow first cool post", "verification": "verified", "timestamp": "unknown" }
+	{"uid" : 1, "username":"verified_loser", "content": "wow first verified post", "timestamp": "unknown", "verification": "verified"},
+	{"uid" : 2, "username":"verified_loser", "content": "wow first cool post", "timestamp": "unknown", "verification": "verified"}
 ]
 
 var f_nodes = [];
@@ -129,7 +129,7 @@ router.post('/posts', function(req, res)
  //        return console.log(err);
  //    }
 	// });
-	postings.push({num : ++index, "username":req.body.user, "content":req.body.content, "verification": "Unverified", "timestamp": timeInMs});
+	postings.push({uid : ++index, "username":req.body.user, "content":req.body.content, "timestamp": timeInMs,  "verification": "Unverified"});
 	console.log(req.body.content);
 	console.log(req.body.user);
 	console.log("here is index: " +index);
