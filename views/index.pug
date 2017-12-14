@@ -15,13 +15,14 @@ block content
 			button.btn.btn-primary(type='submit') Submit
 
 
-	//each thing in v_posts
-	//	div.container
-	//		p.post-things #{v_verification}
-	//		p <span class = 'post-things'>Username:</span> 
-	//		p= thing.username
-	//		p <span class = 'post-things'>Post:</span> 
-	//		p=  thing.content
+	each thing in v_posts
+		div.container
+			p.post-things #{v_verification}
+			p <span class = 'post-things'>Username:</span> 
+			p= thing.username
+			p <span class = 'post-things'>Post:</span> 
+			p=  thing.content
+
 
 	each thing in posts
 		div.container

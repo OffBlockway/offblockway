@@ -22,7 +22,7 @@ var postings = [
 
 var v_postings = [
 	{"num" : 1, "username":"verified_loser", "content": "wow first verified post", "verification": "verified", "timestamp": "unknown" },
-	{"num" : 1, "username":"verified_loser", "content": "wow first cool post", "verification": "verified", "timestamp": "unknown" }
+	{"num" : 2, "username":"verified_loser", "content": "wow first cool post", "verification": "verified", "timestamp": "unknown" }
 ]
 
 var f_nodes = [];
@@ -84,8 +84,11 @@ router.get('/hello', function(req, res, next) {
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
-  res.render('index', { title: 'Spherical', posts: postings, username: postings[index].username, post: postings[index].content, verification: "Unverified"  });
+  // res.render('index', { title: 'Spherical', posts: postings, username: postings[index].username, post: postings[index].content, verification: "Unverified"  });
   //res.render('post', { username: dummy.username }, { post: dummy.post });
+  res.render('index', { title: 'Spherical', posts: postings, username: postings[index].username, post: postings[index].content, index: index, 
+	verification: "Unverified", v_posts: v_postings, v_username: v_postings[v_index].username, post: v_postings[v_index].content, v_index: v_index, 
+	v_verification: "Verified"});
 });
 
 
@@ -120,7 +123,7 @@ router.post('/posts', function(req, res)
  //        return console.log(err);
  //    }
 	// });
-	postings.push({num : ++index, "username":req.body.user, "content":req.body.content, "verification": "unverified", "timestamp": timeInMs});
+	postings.push({num : ++index, "username":req.body.user, "content":req.body.content, "verification": "Unverified", "timestamp": timeInMs});
 	console.log(req.body.content);
 	console.log(req.body.user);
 	console.log("here is index: " +index);
@@ -161,14 +164,15 @@ router.post('/posts', function(req, res)
 	//router.set('view engine', 'pug');
 	//res.redirect('/');
 
-	// res.render('index', { title: 'Spherical', posts: postings, username: postings[index].username, post: postings[index].content, index: index, 
-	// verification: "Unverified"},  {v_posts: v_postings, v_username: v_postings[v_index].username, post: v_postings[v_index].content, v_index: v_index, 
-	// v_verification: "verified"});
-
 	postings.reverse();
+	v_postings.reverse();
 	res.render('index', { title: 'Spherical', posts: postings, username: postings[index].username, post: postings[index].content, index: index, 
-	verification: "Unverified"});
+	verification: "Unverified", v_posts: v_postings, v_username: v_postings[v_index].username, post: v_postings[v_index].content, v_index: v_index, 
+	v_verification: "Verified"});
+	v_postings.reverse();
 	postings.reverse();
+	// res.render('index', { title: 'Spherical', posts: postings, username: postings[index].username, post: postings[index].content, index: index, 
+	// verification: "Unverified"});
 
 
 	res.redirect('/');
@@ -186,21 +190,8 @@ router.get('/', function(req, res)
 
 
 
-
+// registering a passport.json
 router.post('/register', function(req, res, next) {
-
-	res.send(250);
-});
-
-router.post('/package', function(req, res, next) {
-	// for each in postings
-	// {
-	// 	for( each in req.body )
-	// 		if( req.body.uid == postings.uid )
-	// 		{
-	// 			// copy into v_postings
-	// 		}
-	// }
 	for( var i = 0; i < req.body.length; i++)
 	{
 		console.log(req.body[i].uid);	
@@ -214,9 +205,41 @@ router.post('/package', function(req, res, next) {
 });
 
 
+// for verifying posts
+router.post('/package', function(req, res, next) {
+	// for each in postings
+	// {
+	// 	for( each in req.body )
+	// 		if( req.body.uid == postings.uid )
+	// 		{
+	// 			// copy into v_postings
+	// 		}
+	// }
+	for( var i = 0; i < req.body.length; i++)
+	{
+		for( var x = 0; x < postings.length; i++)
+		{
+			if( postings[x].uid === req.body[i].uid) 
+			{
+				v_postings.push(postings[x]);
+				postings.splice(x, 1);
+			}
+
+			// get all the full node information in here
+			
+		}
+
+	}
+	
+
+	res.send(250);
+});
+
+
 // from full node for consensus
 router.post('/consensus', function(req, res, next) {
 	console.log(req.body.uid);
+	// send post request to all full ndoes here
 	res.send(250);
 });
 
