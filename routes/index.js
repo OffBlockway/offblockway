@@ -240,6 +240,7 @@ router.post('/package', function(req, res, next) {
 	res.send(250);
 });
 
+let writeStream = fs.createWriteStream("./routes/dummy.json");
 
 // from full node for consensus
 router.post('/consensus', function(req, res, next) {
@@ -256,12 +257,12 @@ router.post('/scores', function(req, res, next) {
 
 router.post('/client', function(req, res, next) {
 	//res.render('thing', {body: req.body})
-	fs.writeFile("./routes/dummy.json", req.body, function(err) {
+	writeStream.write(JSON.stringify(req.body), function(err) {
     if(err) {
         return console.log(err);
     }
 	});
-	console.log(req.body);
+	console.log(JSON.stringify(req.body));
 	res.send(250);
 });
 
