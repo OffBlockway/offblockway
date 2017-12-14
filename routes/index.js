@@ -164,6 +164,8 @@ router.post('/posts', function(req, res)
 	//router.set('view engine', 'pug');
 	//res.redirect('/');
 
+	res.redirect('/');
+
 	postings.reverse();
 	v_postings.reverse();
 	res.render('index', { title: 'Spherical', posts: postings, username: postings[index].username, post: postings[index].content, index: index, 
@@ -175,7 +177,6 @@ router.post('/posts', function(req, res)
 	// verification: "Unverified"});
 
 
-	res.redirect('/');
 
 	res.end();
 
