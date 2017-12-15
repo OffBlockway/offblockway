@@ -5,8 +5,8 @@ var request = require('request-json');
 var contents = fs.readFileSync("./routes/dummy.json");
 //var dummy = JSON.parse(contents);
 const bodyParser = require('body-parser');
-router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
+router.use(bodyParser.urlencoded({ extended: true }));
 const http = require('http');
 
 
@@ -18,13 +18,13 @@ var num_fnodes = 0;
 //console.log("User Name:", dummy.username);
 
 var postings = [ 
-	{"uid" : 1, "username":"xyz", "content": "hey how is everyone doing today?", "timestamp": "unknown", "verification": "unverified"},
-	{"uid" : 2, "username":"zaid", "content": "how am i?", "timestamp": "unknown", "verification": "unverified" }
+	{"uid" : 1, "username":"xyz", "content": "hey how is everyone doing today?", "timestamp": "unknown", "status": "unverified"},
+	{"uid" : 2, "username":"zaid", "content": "how am i?", "timestamp": "unknown", "status": "unverified" }
 ]
 
 var v_postings = [
-	{"uid" : 1, "username":"verified_loser", "content": "wow first verified post", "timestamp": "unknown", "verification": "verified"},
-	{"uid" : 2, "username":"verified_loser", "content": "wow first cool post", "timestamp": "unknown", "verification": "verified"}
+	{"uid" : 1, "username":"verified_loser", "content": "wow first verified post", "timestamp": "unknown", "status": "verified"},
+	{"uid" : 2, "username":"verified_loser", "content": "wow first cool post", "timestamp": "unknown", "status": "verified"}
 ]
 
 var f_nodes = [];
@@ -129,13 +129,21 @@ router.post('/posts', function(req, res)
  //        return console.log(err);
  //    }
 	// });
-	postings.push({uid : ++index, "username":req.body.user, "content":req.body.content, "timestamp": timeInMs,  "verification": "Unverified"});
-	console.log(req.body.content);
-	console.log(req.body.user);
-	console.log("here is index: " +index);
+	postings.push({uid : ++index, "username":req.body.user, "content":req.body.content, "timestamp": timeInMs,  "status": "Unverified"});
+	// console.log(req.body.content);
+	// console.log(req.body.user);
+	// console.log("here is index: " +index);
 
 	// THIS IS WHERE U CAN CONVERT THE ARRAY TO JSON AND THEN SEND IT!!!!!
-	console.log( JSON.stringify(postings));
+
+	console.log( '{"nodes":' + JSON.stringify(postings) + '}');
+
+
+
+	// for(var i = 0; i< postings.length; i++)
+	// {
+	// 	console.log( JSON.stringify({uid: postings[i] }));
+	// }
 
 
 	// f_nodes.forEach(function(element)
@@ -165,6 +173,40 @@ router.post('/posts', function(req, res)
 	// });
 
 
+
+
+
+	//{"uid":"c847aab9afb9c0e9e2e78eab216fa514c5f8bb667304f02b0b9e86649364b4a5","timestamp":"2017-12-15 00:33:54.332458 UTC","url":"132.162.123.15:3000"}
+
+
+
+
+	// send to full nodes
+	if( num_fnodes > 0 )
+	{
+		for( var i = 0; i < num_fnodes; i++)
+		{
+			const bodyParser = require('body-parser');
+
+			var client = request.createClient("http://" + f_nodes[i].url);
+
+ 			var data = JSON.stringify('{"nodes":' + JSON.stringify(postings) + '}');
+ 			//console.log(x);
+
+			client.post('/cargo', data, function(err, res, body) {
+	 		//console.log("cool");
+			//res.send(x);
+			//res.send("hey whats going on");
+			return console.log(res.statusCode);
+			//res.end();
+			});
+		}
+
+	}
+
+	console.log(f_nodes);
+
+
 	//router.set('view engine', 'ejs');
 	//res.send('post.pug', { username: posts[index].username, post: posts[index].post });
 	//router.set('view engine', 'pug');
@@ -175,7 +217,7 @@ router.post('/posts', function(req, res)
 	postings.reverse();
 	v_postings.reverse();
 	res.render('index', { title: 'Spherical', posts: postings, username: postings[index].username, post: postings[index].content, index: index, 
-	verification: "Unverified", v_posts: v_postings, v_username: v_postings[v_index].username, post: v_postings[v_index].content, v_index: v_index, 
+	verification: postings[index].status, v_posts: v_postings, v_username: v_postings[v_index].username, post: v_postings[v_index].content, v_index: v_index, 
 	v_verification: "Verified"});
 	v_postings.reverse();
 	postings.reverse();
@@ -183,10 +225,12 @@ router.post('/posts', function(req, res)
 	// verification: "Unverified"});
 
 
+	
 
 	res.end();
 
 });
+
 
 router.get('/', function(req, res)
 	{
@@ -198,14 +242,14 @@ router.get('/', function(req, res)
 
 
 // registering a passport.json
-router.post('/register', function(req, res, next) {
-	for( var i = 0; i < req.body.length; i++)
-	{
-		console.log(req.body);	
+router.post('/client', function(req, res, next) {
+	// for( var i = 0; i < req.body.length; i++)
+	// {
+	console.log(req.body);	
 		// get all the full node information in here
-		f_nodes.push({"fullnode" : req.body});
+	f_nodes.push(req.body);
 
-	}
+	// }
 	
 	console.log(f_nodes);
 
@@ -236,16 +280,29 @@ router.post('/package', function(req, res, next) {
 				v_postings.push(postings[x]);
 				postings.splice(x, 1);
 			}
-
-			// get all the full node information in here
-			
+			// get all the full node information in here		
 		}
-
 	}
+
+
 	
 
 	res.send(250);
 });
+
+
+router.post('/remove', function(req, res, next)
+{
+	num_fnodes = num_fnodes - 1;
+	for(var i = 0; i < f_nodes.length; i++)
+	{
+		if(req.body.uid === f_nodes[i].uid)
+		{
+			f_nodes.splice(i, 1);
+		}
+	}
+});
+
 
 let writeStream = fs.createWriteStream("./routes/dummy.json");
 
@@ -258,11 +315,11 @@ router.post('/consensus', function(req, res, next) {
 
 // for DJ PRotocol B from full node
 router.post('/scores', function(req, res, next) {
-
+	
 	res.send(250);
 });
 
-router.post('/client', function(req, res, next) {
+router.post('/register', function(req, res, next) {
 	//res.render('thing', {body: req.body})
 	// writeStream.write(req.body, function(err) {
  //    if(err) {
