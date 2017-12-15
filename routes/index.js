@@ -394,7 +394,7 @@ router.post('/consensus', function(req, res, next) {
  //    //console.log("HEWOIHFEHW");
  //    max_hash = data;
 
-
+// asdfasdf 
  //    res.end();
  // 	 });
  	//var input = fs.writeFileSync('data.json', req.body);
