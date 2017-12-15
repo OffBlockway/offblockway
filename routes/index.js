@@ -433,7 +433,7 @@ router.post('/consensus', function(req, res, next) {
  		var client = request.createClient("http://" + node.url);
  		data = chain;
  		client.post('/injection', data, function(err, res, body) {
-
+ 			// this part is important
 
 			});
  	}
