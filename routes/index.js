@@ -285,7 +285,9 @@ router.post('/client', function(req, res, next) {
 
 	num_fnodes = num_fnodes + 1;
 
+	res.send(f_nodes.peek().url);
 	res.send(250);
+
 });
 
 
@@ -483,9 +485,11 @@ router.post('/miner', function(req, res, next)
 			node.freq = node.freq + 1;
 			var client = request.createClient("http://" + node.url);
 
+
  			data = f_nodes.peek().url;
 			client.post('/miner', data, function(err, res, body) {
-				
+				//res.statusCod
+				send(450);
 			});
 		}
 	}
