@@ -272,7 +272,7 @@ router.post('/client', function(req, res, next) {
 	console.log(req.body);	
 		// get all the full node information in here
 
-	var tuple = { url: req.body.url, freq: 1, hash: req.body.hash }
+	var tuple = { url: JSON.stringify(req.body.url), freq: 1, hash: JSON.stringify(req.body.hash) }
 	f_nodes.enq( tuple );
 
 	// }
