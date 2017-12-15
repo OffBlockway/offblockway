@@ -398,7 +398,7 @@ router.post('/consensus', function(req, res, next) {
  //    res.end();
  // 	 });
  	//var input = fs.writeFileSync('data.json', req.body);
- 	console.log("ZABADOO: " + JSON.stringify(req.body));
+ 	
  	fs.writeFile('data.json', JSON.stringify(req.body));
 
 
@@ -455,6 +455,7 @@ router.post('/consensus', function(req, res, next) {
 
 router.post('/chain', function(req, res, next) {
 
+	
 	theChain = req.body;
 	res.send(250);
 });
