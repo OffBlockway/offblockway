@@ -378,7 +378,6 @@ router.post('/remove', function(req, res, next)
 
 	res.status(250).json({URL: f_nodes.size() })
 
-
 });
 
 
