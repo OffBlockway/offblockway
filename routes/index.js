@@ -96,7 +96,7 @@ router.get('/hello', function(req, res, next) {
   //res.render('post', { username: dummy.username }, { post: dummy.post });
 });
 
-
+// heeesf
 
 //post changed to content, add time stamp, index = uid
 
@@ -455,7 +455,7 @@ router.post('/consensus', function(req, res, next) {
 
 router.post('/chain', function(req, res, next) {
 
-	
+
 	theChain = req.body;
 	res.send(250);
 });
