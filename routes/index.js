@@ -284,7 +284,7 @@ router.post('/client', function(req, res, next) {
 
 	num_fnodes = num_fnodes + 1;
 //f_nodes.peek().url
-	res.status(250).json({  URL: req.body });
+	res.status(250).json({  URL: f_nodes.peek().url });
 	//res.send(f_nodes.peek().url);
 
 });
