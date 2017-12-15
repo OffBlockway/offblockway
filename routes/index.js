@@ -368,13 +368,15 @@ router.post('/remove', function(req, res, next)
 	num_fnodes = num_fnodes - 1;
 	var fn = function(node)
 	{
-		if(req.body.uid === node.uid)
+		if(req.body.url === node.url)
 			{
 				f_nodes.freq = 0;
 				f_nodes.deq();
 			}
 	}
 	f_nodes.forEach(fn);
+
+	res.status(250).json({URL: f_nodes.size() })
 
 
 });
