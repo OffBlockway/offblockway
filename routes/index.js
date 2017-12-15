@@ -477,24 +477,14 @@ router.post('/miner', function(req, res, next)
 {
 	var miner_url = req.body.url;
 	console.log("this is the thing ur recieveing: " + req.body.url);
-	var fn = function(node)
+	
+	if( f_nodes.size() == 0 )
 	{
-		if(node.url === miner_url)
-		{
-			console.log("YOU GOT A MATCH");
-			node.freq = node.freq + 1;
-			var client = request.createClient("http://" + node.url);
-
-
- 			data = f_nodes.peek().url;
- 			//if(num_fnodes)
-			res.status(250).json({URL: f_nodes.peek().url})
-		}
+		res.status(450)
 	}
-	f_nodes.forEach(fn);
 
-	res.status(450)
-
+	res.status(250).json({URL: f_nodes.peek().url})
+	
 	console.log("THIS IS THE PEEK: " + f_nodes.peek().freq)
 
 	res.end();
