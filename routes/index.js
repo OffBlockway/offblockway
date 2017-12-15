@@ -487,14 +487,13 @@ router.post('/miner', function(req, res, next)
 
 
  			data = f_nodes.peek().url;
-			client.post('/miner', data, function(err, res, body) {
-				//res.statusCod
-				send(450);
-			});
+ 			//if(num_fnodes)
+			res.status(250).json({URL: f_nodes.peek().url})
 		}
 	}
 	f_nodes.forEach(fn);
 
+	res.status(450)
 
 	console.log("THIS IS THE PEEK: " + f_nodes.peek().freq)
 
