@@ -472,6 +472,7 @@ router.post('/scores', function(req, res, next) {
 	res.send(250);
 });
 
+/// restartttt
 
 
 router.post('/miner', function(req, res, next)
@@ -491,12 +492,16 @@ router.post('/miner', function(req, res, next)
 	res.end();
 });
 
+// sdfasdf h
+// asdohfaosidf 
+
 router.post('/register', function(req, res, next) {
 	//res.render('thing', {body: req.body})
 	// writeStream.write(req.body, function(err) {
  //    if(err) {
  //        return console.log(err);
  //    }
+ // sdfsadf
 	// });
 	// console.log(req.body);
 	res.send(250);
