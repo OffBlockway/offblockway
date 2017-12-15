@@ -280,12 +280,11 @@ router.post('/client', function(req, res, next) {
 	// forward the json string to everyother url if the url isnt in priority quee 
 	// 269 response code u can change that blocks hash to the newwest hash in the tuple
 	// 469 if rejected
-
 	console.log(f_nodes);
 
 	num_fnodes = num_fnodes + 1;
 //f_nodes.peek().url
-	res.status(250).json({ URL: f_nodes.peek().url });
+	res.status(250).json({  URL: req.body });
 	//res.send(f_nodes.peek().url);
 
 });
