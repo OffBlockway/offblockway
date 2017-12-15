@@ -1,5 +1,6 @@
 import json
 data = json.load(open('data.json'))
+f = open('max_hash.txt', 'w')
 
 hashes = []
 #increment over the json data and add it to array
@@ -25,7 +26,9 @@ for i in range(len(hashes)):
         max_freq = hash_freq[hashes[i]]
         max_hash = hashes[i] 
 
-
+f.write(max_hash)
 print( max_hash )
+
+f.close()
         
     

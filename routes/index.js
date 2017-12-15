@@ -8,12 +8,26 @@ const bodyParser = require('body-parser');
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 const http = require('http');
+var spawn = require('child_process').spawn;
+var PythonShell = require('python-shell');
+var PriorityQueue = require('priorityqueuejs');
+
+
+
+
+// var ls  = spawn('ls', ['./consensus.py']);
+// ls.stdout.on('data', (data) => {
+// 	//console.log("WOWOWO");
+//     console.log(`stdout: ${data}`);
+// });
 
 
 var index = 1; 
 var v_index = 0;
 
 var num_fnodes = 0;
+var num_miners = 0;
+var theChain = "";
 
 //console.log("User Name:", dummy.username);
 
@@ -27,8 +41,16 @@ var v_postings = [
 	{"uid" : 2, "username":"verified_loser", "content": "wow first cool post", "timestamp": "unknown", "status": "verified"}
 ]
 
-var f_nodes = [];
+//var f_nodes = [];
 
+// var f_nodes = new PriorityQueue(function(a, b) {
+//   return a.cash - b.cash;
+// });
+
+var f_nodes = new PriorityQueue(function(a, b)
+	{
+		return b.freq - a.freq;
+	});
 
 
 // const options = {
@@ -184,11 +206,13 @@ router.post('/posts', function(req, res)
 	// send to full nodes
 	if( num_fnodes > 0 )
 	{
-		for( var i = 0; i < num_fnodes; i++)
+		var fn = function( node )
 		{
 			const bodyParser = require('body-parser');
 
-			var client = request.createClient("http://" + f_nodes[i].url);
+			var client = request.createClient("http://" + node.url);
+
+			console.log("THIS IS IMPORTANT: " + node.url);
 
  			var data = JSON.stringify('{"nodes":' + JSON.stringify(postings) + '}');
  			//console.log(x);
@@ -198,13 +222,13 @@ router.post('/posts', function(req, res)
 			//res.send(x);
 			//res.send("hey whats going on");
 			return console.log(res.statusCode);
-			//res.end();
 			});
 		}
+		f_nodes.forEach(fn);
 
 	}
 
-	console.log(f_nodes);
+	console.log(f_nodes.peek);
 
 
 	//router.set('view engine', 'ejs');
@@ -247,10 +271,16 @@ router.post('/client', function(req, res, next) {
 	// {
 	console.log(req.body);	
 		// get all the full node information in here
-	f_nodes.push(req.body);
+
+	var tuple = { url: req.body.url, freq: 1, hash: req.body.hash }
+	f_nodes.enq( tuple );
 
 	// }
-	
+
+	// forward the json string to everyother url if the url isnt in priority quee 
+	// 269 response code u can change that blocks hash to the newwest hash in the tuple
+	// 469 if rejected
+
 	console.log(f_nodes);
 
 	num_fnodes = num_fnodes + 1;
@@ -259,10 +289,48 @@ router.post('/client', function(req, res, next) {
 });
 
 
+router.post('/transaction', function(req, res, next)
+{
 
+});
+// send get request to transactions route
+
+
+/// econcensus 
 
 // for verifying posts
 router.post('/package', function(req, res, next) {
+	
+	package = req.body;
+	package_url = req.body.url;
+	package_hash = req.body.hash;
+	var fn = function(node)
+	{
+		if(node.url !== package_url)
+		{
+			var client = request.createClient("http://" + node.url);
+
+ 			//var data = JSON.stringify('{"nodes":' + JSON.stringify(postings) + '}');
+ 			//console.log(x);
+ 			data = package;
+			client.post('/package', data, function(err, res, body) {
+	 		//console.log("cool");
+			//res.send(x);
+			//res.send("hey whats going on");
+			if(res.statusCode === 269)
+			{
+				node.hash = package_hash;
+			}
+			});
+			//do nothing
+		}
+	}
+	f_nodes.forEach(fn);
+	res.send(250);
+});
+
+// for verifying posts
+router.post('/cargo', function(req, res, next) {
 	// for each in postings
 	// {
 	// 	for( each in req.body )
@@ -291,32 +359,142 @@ router.post('/package', function(req, res, next) {
 });
 
 
+
+
 router.post('/remove', function(req, res, next)
 {
 	num_fnodes = num_fnodes - 1;
-	for(var i = 0; i < f_nodes.length; i++)
+	var fn = function(node)
 	{
-		if(req.body.uid === f_nodes[i].uid)
-		{
-			f_nodes.splice(i, 1);
-		}
+		if(req.body.uid === node.uid)
+			{
+				f_nodes.freq = 0;
+				f_nodes.deq();
+			}
 	}
+	f_nodes.forEach(fn);
+
+
 });
 
 
 let writeStream = fs.createWriteStream("./routes/dummy.json");
 
+
+
+
 // from full node for consensus
 router.post('/consensus', function(req, res, next) {
-	console.log(req.body.uid);
+
+
+	// fs.readFile('max_hash.txt', function(err, data) {
+ //    //res.writeHead(200, {'Content-Type': 'text/html'});
+ //    //console.log("HEWOIHFEHW");
+ //    max_hash = data;
+
+
+ //    res.end();
+ // 	 });
+ 	//var input = fs.writeFileSync('data.json', req.body);
+ 	console.log("ZABADOO: " + JSON.stringify(req.body));
+ 	fs.writeFile('data.json', JSON.stringify(req.body));
+
+
+ 	PythonShell.run('consensus.py', function (err) {
+  		if (err) throw err;
+ 		console.log('finished');
+	});
+
+ 	var text = fs.readFileSync('max_hash.txt', 'utf8');
+
+ 	var chain = {};
+
+ 	var fn = function(node)
+ 	{
+ 		if( text === node.hash )
+ 		{
+ 			var client = request.createClient("http://" + node.url)
+ 			client.get('/econsensus', function(err, res, body) {
+				console.log(body);
+				chain = body;
+ 				return console.log(res.statusCode);
+ 			});
+
+ 		}
+ 	}
+
+ 	f_nodes.forEach(fn);
+
+
+ 	var fx = function(node)
+ 	{
+ 		var client = request.createClient("http://" + node.url);
+ 		data = chain;
+ 		client.post('/injection', data, function(err, res, body) {
+
+
+			});
+ 	}
+
+ 	f_nodes.forEach(fx);
+ 	// get request to econsensus the url of the hash that matches
+ 	// full node that u sent to will send u back the chain u need to inject to itll have hash of chain
+ 	// and merkel transactions 
+
+ 	// send to injection route
+ 	
+ 	console.log(text);
+ 	
+
+	
 	// send post request to all full ndoes here
+	res.send(250);
+});
+
+router.post('/chain', function(req, res, next) {
+
+	theChain = req.body;
+	res.send(250);
+});
+
+// for DJ PRotocol B from full node
+router.post('/doublejeopardy', function(req, res, next) {
+
 	res.send(250);
 });
 
 // for DJ PRotocol B from full node
 router.post('/scores', function(req, res, next) {
-	
+
 	res.send(250);
+});
+
+
+
+router.post('/miner', function(req, res, next)
+{
+	var miner_url = req.body.url;
+	console.log("this is the thing ur recieveing: " + req.body.url);
+	var fn = function(node)
+	{
+		if(node.url === miner_url)
+		{
+			console.log("YOU GOT A MATCH");
+			node.freq = node.freq + 1;
+			var client = request.createClient("http://" + node.url);
+
+ 			data = f_nodes.peek().url;
+			client.post('/miner', data, function(err, res, body) {
+				
+			});
+		}
+	}
+	f_nodes.forEach(fn);
+
+
+	console.log("THIS IS THE PEEK: " + f_nodes.peek().freq)
+
+	res.end();
 });
 
 router.post('/register', function(req, res, next) {
